@@ -23,7 +23,9 @@ class LearningAgent(Agent):
         deadline = self.env.get_deadline(self)
 
         # TODO: Update state
-        
+        inputs_tuple = tuple(inputs.values())
+        self.state = (inputs_tuple, self.next_waypoint, deadline)
+
         # TODO: Select action according to your policy
         action = random.choice(self.env.valid_actions)
 
