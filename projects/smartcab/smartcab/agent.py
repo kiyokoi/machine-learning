@@ -14,6 +14,17 @@ class LearningAgent(Agent):
         self.qtable = {}
         # Track agent's learning ability for each trial
         self.total_reward = 0.0
+        
+        # Populate Q-table with place-holders
+        for light in ['red', 'green']:
+            for oncoming in self.env.valid_actions:
+                for left in self.env.valid_actions:
+                    for right in self.env.valid_actions:
+                        for waypoint in self.env.valid_actions:
+                                state = ((light, oncoming, left, right), waypoint)
+                                for action in self.env.valid_actions:
+                                    self.qtable[(state, action)] = -float('inf')
+
 
     def reset(self, destination=None):
         self.planner.route_to(destination)
