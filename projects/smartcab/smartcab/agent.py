@@ -11,6 +11,9 @@ class LearningAgent(Agent):
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
+        self.qtable = {}
+        # Track agent's learning ability for each trial
+        self.total_reward = 0.0
 
     def reset(self, destination=None):
         self.planner.route_to(destination)
