@@ -11,6 +11,20 @@ class LearningAgent(Agent):
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
+        self.qtable = {}
+        # Track agent's learning ability for each trial
+        self.total_reward = 0.0
+        
+        # Populate Q-table with place-holders
+        for light in ['red', 'green']:
+            for oncoming in self.env.valid_actions:
+                for left in self.env.valid_actions:
+                    for right in self.env.valid_actions:
+                        for waypoint in self.env.valid_actions:
+                                state = ((light, oncoming, left, right), waypoint)
+                                for action in self.env.valid_actions:
+                                    self.qtable[(state, action)] = -float('inf')
+
 
     def reset(self, destination=None):
         self.planner.route_to(destination)
