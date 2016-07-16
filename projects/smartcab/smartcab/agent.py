@@ -42,10 +42,10 @@ class LearningAgent(Agent):
         self.state = (inputs_tuple, self.next_waypoint, deadline)
 
         # TODO: Select action according to your policy
-        action = random.choice(self.env.valid_actions)
+        # action = random.choice(self.env.valid_actions)    # [for Q2]
 
         # Execute action and get reward
-        reward = self.env.act(self, action)
+        # reward = self.env.act(self, action)   # [for Q2]
 
         # TODO: Learn policy based on state, action, reward
 
