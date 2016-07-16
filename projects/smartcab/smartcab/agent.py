@@ -42,15 +42,31 @@ class LearningAgent(Agent):
         self.state = (inputs_tuple, self.next_waypoint, deadline)
 
         # TODO: Select action according to your policy
-        action = random.choice(self.env.valid_actions)
+        # action = random.choice(self.env.valid_actions)    # [for Q2]
 
         # Execute action and get reward
-        reward = self.env.act(self, action)
+        # reward = self.env.act(self, action)   # [for Q2]
 
         # TODO: Learn policy based on state, action, reward
-
+        def argmax(state, qtable, waypoint):        
+            max_reward = -float('inf')
+            best_action = None
+            for action in self.env.valid_actions:
+                #print 'action: {}, qtable: {}, max: {}'.format(action, self.qtable[(self.state, action)], max_reward)   # [debug]
+                if qtable[(state, action)] > max_reward:
+                    best_action = action
+                    max_reward = qtable[(state, action)]
+        
+            # Take the planned action if there is no positive reward        
+            if max_reward < 0.0:
+                best_action = waypoint
+            
+            return best_action
+            
+        best_action = argmax(self.state, self.qtable, self.next_waypoint)
+        reward = self.env.act(self, best_action)
+        
         print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
-
 
 def run():
     """Run the agent for a finite number of trials."""
