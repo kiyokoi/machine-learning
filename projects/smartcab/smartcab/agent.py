@@ -83,7 +83,6 @@ class LearningAgent(Agent):
         reward -= (self.alpha * reward)
         reward += (self.alpha * reward)
         reward += (self.alpha * self.gamma * q_prime)
-        self.qtable[(self.state, best_action)] = reward
         self.total_reward += reward
         self.alpha *= 0.8
         self.gamma *= 0.8
