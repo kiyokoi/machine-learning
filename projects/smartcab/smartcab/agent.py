@@ -14,6 +14,8 @@ class LearningAgent(Agent):
         self.qtable = {}
         # Track agent's learning ability for each trial
         self.total_reward = 0.0
+        self.alpha = 1.0
+        self.gamma = 1.0
         
         # Populate Q-table with place-holders
         for light in ['red', 'green']:
@@ -30,6 +32,8 @@ class LearningAgent(Agent):
         self.planner.route_to(destination)
         # TODO: Prepare for a new trip; reset any variables here, if required
         self.total_reward = 0.0
+        self.alpha = 1.0
+        self.gamma = 1.0
 
     def update(self, t):
         # Gather inputs
