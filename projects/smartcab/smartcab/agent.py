@@ -71,6 +71,11 @@ class LearningAgent(Agent):
         best_action = best[0]
         max_reward = best[1]
         
+        if max_reward < 0.0:
+            qval = 0.0
+        else:
+            qval = max_reward
+            
         reward = self.env.act(self, best_action)
         
         # Update reward with learning rate, alpha, and discount factor, gamma
@@ -84,7 +89,7 @@ class LearningAgent(Agent):
         q_prime = self.qtable[(s_prime, a_prime)]
         if q_prime < -9999:
             q_prime = 0.0
-        reward -= (self.alpha * reward)
+        reward -= (self.alpha * qval)
         reward += (self.alpha * reward)
         reward += (self.alpha * self.gamma * q_prime)
         self.total_reward += reward
