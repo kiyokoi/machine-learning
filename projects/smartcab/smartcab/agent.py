@@ -14,6 +14,8 @@ class LearningAgent(Agent):
         self.qtable = {}
         # Track agent's learning ability for each trial
         self.total_reward = 0.0
+        self.alpha = 1.0
+        self.gamma = 1.0
         
         # Populate Q-table with place-holders
         for light in ['red', 'green']:
@@ -30,6 +32,8 @@ class LearningAgent(Agent):
         self.planner.route_to(destination)
         # TODO: Prepare for a new trip; reset any variables here, if required
         self.total_reward = 0.0
+        self.alpha = 1.0
+        self.gamma = 1.0
 
     def update(self, t):
         # Gather inputs
@@ -65,6 +69,24 @@ class LearningAgent(Agent):
             
         best_action = argmax(self.state, self.qtable, self.next_waypoint)
         reward = self.env.act(self, best_action)
+        
+        # Update reward with learning rate, alpha, and discount factor, gamma
+        # alpha and gamma are reduced by 20% in each iteration
+        self.next_waypoint = self.planner.next_waypoint()        
+        inputs = self.env.sense(self)
+        inputs_tuple = tuple(inputs.values())
+        s_prime = (inputs_tuple, self.next_waypoint)
+        a_prime = argmax(s_prime, self.qtable, self.next_waypoint)        
+        q_prime = self.qtable[(s_prime, a_prime)]
+        if q_prime < -9999:
+            q_prime = 0.0
+        reward -= (self.alpha * reward)
+        reward += (self.alpha * reward)
+        reward += (self.alpha * self.gamma * q_prime)
+        self.qtable[(self.state, best_action)] = reward
+        self.total_reward += reward
+        self.alpha *= 0.8
+        self.gamma *= 0.8
         
         print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
 
