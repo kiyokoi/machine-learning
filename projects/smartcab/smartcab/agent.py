@@ -88,7 +88,10 @@ class LearningAgent(Agent):
         self.alpha *= 0.8
         self.gamma *= 0.8
         
-        print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
+        if self.next_waypoint == None:        
+            print 'Cumulative reward = {}'.format(self.total_reward)
+
+        #print "LearningAgent.update(): deadline = {}, inputs = {}, action = {}, reward = {}".format(deadline, inputs, action, reward)  # [debug]
 
 def run():
     """Run the agent for a finite number of trials."""
