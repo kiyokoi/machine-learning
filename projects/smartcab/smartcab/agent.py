@@ -65,9 +65,12 @@ class LearningAgent(Agent):
             if max_reward < 0.0:
                 best_action = waypoint
             
-            return best_action
+            return best_action, max_reward
             
-        best_action = argmax(self.state, self.qtable, self.next_waypoint)
+        best = argmax(self.state, self.qtable, self.next_waypoint)
+        best_action = best[0]
+        max_reward = best[1]
+        
         reward = self.env.act(self, best_action)
         
         # Update reward with learning rate, alpha, and discount factor, gamma
@@ -76,7 +79,8 @@ class LearningAgent(Agent):
         inputs = self.env.sense(self)
         inputs_tuple = tuple(inputs.values())
         s_prime = (inputs_tuple, self.next_waypoint)
-        a_prime = argmax(s_prime, self.qtable, self.next_waypoint)        
+        argmaxprime = argmax(s_prime, self.qtable, self.next_waypoint)        
+        a_prime = argmaxprime[0]
         q_prime = self.qtable[(s_prime, a_prime)]
         if q_prime < -9999:
             q_prime = 0.0
