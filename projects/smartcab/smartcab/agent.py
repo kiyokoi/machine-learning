@@ -25,7 +25,7 @@ class LearningAgent(Agent):
                         for waypoint in self.env.valid_actions:
                                 state = ((light, oncoming, left, right), waypoint)
                                 for action in self.env.valid_actions:
-                                    self.qtable[(state, action)] = -float('inf')
+                                    self.qtable[(state, action)] = 2.0
 
 
     def reset(self, destination=None):
@@ -89,9 +89,9 @@ class LearningAgent(Agent):
         q_prime = self.qtable[(s_prime, a_prime)]
         if q_prime < -9999:
             q_prime = 0.0
-        reward -= (self.alpha * qval)
-        reward += (self.alpha * reward)
-        reward += (self.alpha * self.gamma * q_prime)
+        self.qtable[(self.state, best_action)] -= (self.alpha * qval)
+        self.qtable[(self.state, best_action)] += (self.alpha * reward)
+        self.qtable[(self.state, best_action)] += (self.alpha * self.gamma * q_prime)
         self.total_reward += reward
         self.alpha *= 0.8
         self.gamma *= 0.8
