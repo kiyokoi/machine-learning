@@ -55,18 +55,22 @@ class LearningAgent(Agent):
         def argmax(state, qtable, waypoint):        
             max_reward = -float('inf')
             best_action = None
-            for action in self.env.valid_actions:
-                #print 'action: {}, qtable: {}, max: {}'.format(action, self.qtable[(self.state, action)], max_reward)   # [debug]
-                if qtable[(state, action)] > max_reward:
-                    best_action = action
-                    max_reward = qtable[(state, action)]
-        
-            # Take the planned action if there is no positive reward        
-            if max_reward < 0.0:
-                best_action = waypoint
+            count = 0
             
-            return best_action, max_reward
+            # Choose action between the same max Q-value
+            qval = [qtable[(state, action)] for action in self.env.valid_actions]
+            maxQ = max(qval)
+            count = qval.count(maxQ)
+            if count > 1:
+                best_action = [i for i in range(len(self.env.valid_actions)) if qval[i] == maxQ]
+                i = random.choice(best_action)
+            else:
+                i = qval.index(maxQ)
+                
+            best_action = self.env.valid_actions[i]
             
+            return best_action, maxQ
+
         best = argmax(self.state, self.qtable, self.next_waypoint)
         best_action = best[0]
         max_reward = best[1]
